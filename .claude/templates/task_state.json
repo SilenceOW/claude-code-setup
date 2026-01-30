@@ -1,0 +1,17 @@
+{
+  "task_id": "",
+  "description": "",
+  "status": "PENDING",
+  "task_type": "",
+  "domain": "",
+  "iteration": 0,
+  "max_iterations": 3,
+  "created_at": "",
+  "updated_at": "",
+  "components": [],
+  "architecture_approved": false,
+  "implementation_plan": [],
+  "completed_files": [],
+  "reviews": {},
+  "failure_reason": null
+}

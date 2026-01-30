@@ -1,0 +1,73 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "tool == 'Bash' && tool_input.command matches '(npm|pnpm|yarn|pip|pytest)'",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -z \"$TMUX\" ]; then echo '[Hook] Consider using tmux for long-running commands' >&2; fi"
+          }
+        ]
+      },
+      {
+        "matcher": "tool == 'Write' && tool_input.file_path matches '\\.md$' && !(tool_input.file_path matches '(README|CLAUDE|architecture|review)')",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[Hook] Blocking unnecessary .md file creation. Use only README, architecture.md, or reviews.' >&2; exit 1"
+          }
+        ]
+      },
+      {
+        "matcher": "tool == 'Bash' && tool_input.command matches 'git push'",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[Hook] Review changes before pushing:' >&2; git diff --stat HEAD~1 >&2"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "tool == 'Write' && tool_input.file_path matches '\\.(py)$'",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if command -v ruff &> /dev/null; then ruff format \"$TOOL_OUTPUT_PATH\" 2>/dev/null; fi"
+          }
+        ]
+      },
+      {
+        "matcher": "tool == 'Write' && tool_input.file_path matches '\\.(ts|tsx|js|jsx)$'",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if command -v prettier &> /dev/null; then prettier --write \"$TOOL_OUTPUT_PATH\" 2>/dev/null; fi"
+          }
+        ]
+      },
+      {
+        "matcher": "tool == 'Write' && tool_input.file_path matches '\\.(py|ts|tsx|js|jsx)$'",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if grep -q 'console\\.log\\|print(' \"$TOOL_OUTPUT_PATH\" 2>/dev/null; then echo '[Hook] Warning: Found console.log/print statement' >&2; fi"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f .task_state.json ]; then echo '[Hook] Task state saved to .task_state.json' >&2; fi"
+          }
+        ]
+      }
+    ]
+  }
+}

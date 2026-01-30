@@ -1,0 +1,101 @@
+{
+  "$schema": "https://code.claude.com/schemas/claude.json",
+  "project": {
+    "name": "Multi-Agent Workflow",
+    "description": "Development workflow with 11 specialized agents"
+  },
+  "settings": {
+    "defaultModel": "opus",
+    "compactThreshold": 70,
+    "autoCompact": true
+  },
+  "permissions": {
+    "allowedTools": [
+      "Read",
+      "Write",
+      "Bash",
+      "Glob",
+      "Grep",
+      "LS"
+    ],
+    "blockedPaths": [
+      ".env",
+      ".env.*",
+      "**/*.pem",
+      "**/*.key"
+    ]
+  },
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+    "firecrawl": { "command": "npx", "args": ["-y", "firecrawl-mcp"] },
+    "memory": { "command": "npx", "args": ["-y", "@modelcontextprotocol/server-memory"] },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    }
+  },
+  "disabledMcpServers": [],
+  "agents": {
+    "planner": {
+      "model": "sonnet",
+      "description": "Break down features into implementation plans",
+      "prompt": ".claude/agents/planner.md"
+    },
+    "architect": {
+      "model": "opus",
+      "description": "System design and architecture decisions",
+      "prompt": ".claude/agents/architect.md"
+    },
+    "coder": {
+      "model": "sonnet",
+      "description": "Write production code",
+      "prompt": ".claude/agents/coder.md"
+    },
+    "tdd-guide": {
+      "model": "sonnet",
+      "description": "Test-driven development guidance",
+      "prompt": ".claude/agents/tdd-guide.md"
+    },
+    "code-reviewer": {
+      "model": "sonnet",
+      "description": "Code quality and best practices review",
+      "prompt": ".claude/agents/code-reviewer.md"
+    },
+    "security-reviewer": {
+      "model": "opus",
+      "description": "Security vulnerability analysis",
+      "prompt": ".claude/agents/security-reviewer.md"
+    },
+    "bugfixer": {
+      "model": "sonnet",
+      "description": "Fix bugs from code review",
+      "prompt": ".claude/agents/bugfixer.md"
+    },
+    "build-error-resolver": {
+      "model": "sonnet",
+      "description": "Diagnose and fix build/runtime errors",
+      "prompt": ".claude/agents/build-error-resolver.md"
+    },
+    "e2e-runner": {
+      "model": "sonnet",
+      "description": "Write and run end-to-end tests",
+      "prompt": ".claude/agents/e2e-runner.md"
+    },
+    "refactor-cleaner": {
+      "model": "sonnet",
+      "description": "Remove dead code, simplify complexity",
+      "prompt": ".claude/agents/refactor-cleaner.md"
+    },
+    "doc-updater": {
+      "model": "haiku",
+      "description": "Keep documentation in sync with code",
+      "prompt": ".claude/agents/doc-updater.md"
+    }
+  }
+}
